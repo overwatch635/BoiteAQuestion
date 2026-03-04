@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boîte à Questions - Informatique</title>
+    <link rel="stylesheet" href="questions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-question-circle"></i> Boîte à Questions - Informatique</h1>
+            <p>Révisez et testez vos connaissances en informatique avec des questions ciblées</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2><i class="fas fa-tachometer-alt"></i> Tableau de Bord</h2>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="total-questions">0</div>
+                        <div class="stat-label">Questions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="reviewed-today">0</div>
+                        <div class="stat-label">Révisés aujourd'hui</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="mastery-rate">0%</div>
+                        <div class="stat-label">Maîtrise</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="global-progress"></div>
+                </div>
+                <p>Progression globale: <span id="progress-text">0%</span></p>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-random"></i> Question Rapide</h2>
+                <div id="question-container">
+                    <p>Sélectionnez un thème pour commencer une question rapide</p>
+                </div>
+                <div class="theme-selector" id="quick-theme-selector">
+                    <!-- Thèmes seront générés dynamiquement -->
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" id="show-answer-btn"><i class="fas fa-eye"></i> Voir la réponse</button>
+                    <button class="btn btn-secondary" id="next-question-btn"><i class="fas fa-forward"></i> Question suivante</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="revision"><i class="fas fa-book-open"></i> Révisions Espacées</button>
+            <button class="tab" data-tab="exam"><i class="fas fa-file-alt"></i> Mode Examen</button>
+            <button class="tab" data-tab="courses"><i class="fas fa-graduation-cap"></i> Cours & Définitions</button>
+            <button class="tab" data-tab="history"><i class="fas fa-history"></i> Historique</button>
+            <button class="tab" data-tab="manage"><i class="fas fa-cog"></i> Gestion des Données</button>
+        </div>
+
+        <div class="tab-content active" id="revision-tab">
+            <div class="card">
+                <h2><i class="fas fa-brain"></i> Révisions Intelligentes</h2>
+                <div id="revision-container">
+                    <p>Chargement des questions à réviser...</p>
+                </div>
+                <div class="difficulty">
+                    <span>Évaluer votre maîtrise :</span>
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn easy" data-difficulty="easy">Facile</button>
+                        <button class="difficulty-btn medium" data-difficulty="medium">Moyen</button>
+                        <button class="difficulty-btn hard" data-difficulty="hard">Difficile</button>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-warning" id="show-revision-answer-btn"><i class="fas fa-lightbulb"></i> Voir la réponse</button>
+                    <button class="btn btn-success" id="next-revision-btn"><i class="fas fa-check-circle"></i> Question suivante</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="exam-tab">
+            <div class="card">
+                <h2><i class="fas fa-file-alt"></i> Mode Examen</h2>
+                <p>Révisez de manière structurée en sélectionnant un thème et en explorant toutes les questions associées.</p>
+                
+                <div class="exam-controls">
+                    <div class="control-group">
+                        <label for="exam-theme-select"><i class="fas fa-filter"></i> Sélectionner un thème :</label>
+                        <select id="exam-theme-select" class="theme-select">
+                            <option value="all">Tous les thèmes</option>
+                            <!-- Options seront ajoutées dynamiquement -->
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="exam-sort-select"><i class="fas fa-sort"></i> Trier par :</label>
+                        <select id="exam-sort-select" class="sort-select">
+                            <option value="default">Ordre par défaut</option>
+                            <option value="difficulty-asc">Difficulté (facile à difficile)</option>
+                            <option value="difficulty-desc">Difficulté (difficile à facile)</option>
+                            <option value="mastery">Maîtrise (faible à élevée)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label><i class="fas fa-sliders-h"></i> Filtres :</label>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filter-unreviewed" checked> Non révisées
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filter-easy" checked> Facile
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filter-medium" checked> Moyen
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filter-hard" checked> Difficile
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="exam-stats">
+                    <div class="exam-stat">
+                        <span class="exam-stat-label">Questions disponibles :</span>
+                        <span class="exam-stat-value" id="exam-total-questions">0</span>
+                    </div>
+                    <div class="exam-stat">
+                        <span class="exam-stat-label">À réviser :</span>
+                        <span class="exam-stat-value" id="exam-to-review">0</span>
+                    </div>
+                    <div class="exam-stat">
+                        <span class="exam-stat-label">Maîtrisées :</span>
+                        <span class="exam-stat-value" id="exam-mastered">0</span>
+                    </div>
+                </div>
+                
+                <div class="exam-container" id="exam-container">
+                    <!-- Les questions d'examen seront chargées ici -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="expand-all-btn"><i class="fas fa-expand"></i> Tout développer</button>
+                    <button class="btn btn-secondary" id="collapse-all-btn"><i class="fas fa-compress"></i> Tout réduire</button>
+                    <button class="btn btn-success" id="mark-all-reviewed-btn"><i class="fas fa-check-double"></i> Tout marquer comme révisé</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="courses-tab">
+            <div class="card">
+                <h2><i class="fas fa-book"></i> Cours & Définitions</h2>
+                <div class="theme-selector" id="course-theme-selector">
+                    <!-- Thèmes pour les cours seront générés dynamiquement -->
+                </div>
+                <div id="courses-content">
+                    <!-- Contenu des cours sera chargé dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="history-tab">
+            <div class="card">
+                <h2><i class="fas fa-chart-line"></i> Historique des Révisions</h2>
+                <div class="review-history" id="review-history">
+                    <!-- Historique sera chargé dynamiquement -->
+                </div>
+                <button class="btn btn-secondary" id="clear-history-btn"><i class="fas fa-trash-alt"></i> Effacer l'historique</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="manage-tab">
+            <div class="card">
+                <h2><i class="fas fa-database"></i> Gestion des Données</h2>
+                <p>Vous pouvez modifier les questions, réponses, cours et définitions directement dans le fichier JavaScript. Cependant, vous pouvez aussi exporter et importer vos données ici.</p>
+                
+                <div class="data-management">
+                    <h3><i class="fas fa-file-export"></i> Export / Import des Données</h3>
+                    <div class="export-import">
+                        <button class="btn btn-success" id="export-data-btn"><i class="fas fa-download"></i> Exporter les données</button>
+                        <button class="btn btn-warning" id="import-data-btn"><i class="fas fa-upload"></i> Importer des données</button>
+                        <button class="btn btn-secondary" id="reset-data-btn"><i class="fas fa-redo"></i> Réinitialiser aux données par défaut</button>
+                    </div>
+                    
+                    <textarea class="data-textarea" id="data-textarea" placeholder="Les données exportées apparaîtront ici..."></textarea>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-success" id="save-import-btn"><i class="fas fa-save"></i> Enregistrer les données importées</button>
+                    </div>
+                </div>
+                
+                <div class="data-management">
+                    <h3><i class="fas fa-code"></i> Modification Directe dans le Code</h3>
+                    <p>Pour adapter cette application à votre filière ou classe, modifiez le fichier <code>script.js</code> et cherchez la section "DONNÉES DE BASE". Vous pouvez y ajouter, modifier ou supprimer :</p>
+                    <ul>
+                        <li>Les thèmes de questions</li>
+                        <li>Les questions et réponses</li>
+                        <li>Les cours et définitions</li>
+                    </ul>
+                    <p>Toutes les modifications seront automatiquement reflétées dans l'application après rechargement de la page.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Boîte à Questions - Informatique &copy; <span id="current-year"></span> | Conçu pour être hébergé gratuitement (HTML/CSS/JS uniquement)</p>
+            <p>Les données sont sauvegardées localement dans votre navigateur</p>
+        </footer>
+    </div>
+
+    <script src="questions.js"></script>
+</body>
+</html>
